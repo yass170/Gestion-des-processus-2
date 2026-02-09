@@ -40,12 +40,15 @@ public sealed class ProcessLauncher : IProcessLauncher
                 return ProcessLaunchResult.FromFailure($"Unable to launch {request.FileName}.");
             }
 
-            _console.WriteLine($"Process {process.ProcessName} (Id: {process.Id}) started.");
+            int parentProcessId = Process.GetCurrentProcess().Id;
+            _console.WriteLine(
+                $"Process {process.ProcessName} (Id: {process.Id}, ParentId: {parentProcessId}) started.");
 
             if (request.WaitForExit)
             {
                 process.WaitForExit();
-                _console.WriteLine($"Process {process.ProcessName} (Id: {process.Id}) exited.");
+                _console.WriteLine(
+                    $"Process {process.ProcessName} (Id: {process.Id}, ParentId: {parentProcessId}) exited.");
 
                 if (request.ParentDelayMilliseconds > 0)
                 {

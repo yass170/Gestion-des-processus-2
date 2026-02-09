@@ -10,7 +10,8 @@ public static class Program
     {
         IConsole console = new SystemConsole();
         ICommandLineOptionsParser optionsParser = new CommandLineOptionsParser();
-        IProcessInspector processInspector = new ProcessInspector();
+        IParentProcessResolver parentProcessResolver = new WindowsParentProcessResolver();
+        IProcessInspector processInspector = new ProcessInspector(parentProcessResolver);
         IProcessListPresenter processListPresenter = new ProcessListPresenter(console, processInspector);
         ISolutionLocator solutionLocator = new SolutionLocator();
         IProjectContextProvider projectContextProvider = new ProjectContextProvider(solutionLocator);
