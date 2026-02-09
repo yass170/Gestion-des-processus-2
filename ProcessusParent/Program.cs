@@ -2,6 +2,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
+// If requested, print the process list and exit.
+if (args.Length > 0 && args[0].Equals("--list-processes", StringComparison.OrdinalIgnoreCase))
+{
+    PrintProcessList();
+    return;
+}
+
 // Locate the solution root so we can find the built ConsoleHelloWorld executable.
 string? solutionRoot = FindSolutionRoot(AppContext.BaseDirectory, "Gestion-des-processus-2.sln");
 if (solutionRoot is null)
@@ -136,5 +143,62 @@ static void LaunchAndWait(ProcessStartInfo startInfo, int parentDelayMs)
     if (parentDelayMs > 0)
     {
         Thread.Sleep(parentDelayMs);
+    }
+}
+
+/// <summary>
+/// Prints the list of running processes with key metrics.
+/// </summary>
+static void PrintProcessList()
+{
+    Console.WriteLine("Id     Name                           Priority   VirtualMB   WorkingMB");
+    Console.WriteLine("----   ----                           --------   ---------   ---------");
+
+    foreach (Process process in Process.GetProcesses())
+    {
+        string priority = SafeGetPriority(process);
+        string virtualMb = SafeGetVirtualMemoryMb(process);
+        string workingMb = SafeGetWorkingSetMb(process);
+
+        Console.WriteLine(
+            $"{process.Id,4}   {process.ProcessName,-30} {priority,-9} {virtualMb,9} {workingMb,11}");
+    }
+}
+
+static string SafeGetPriority(Process process)
+{
+    try
+    {
+        return process.PriorityClass.ToString();
+    }
+    catch
+    {
+        return "N/A";
+    }
+}
+
+static string SafeGetVirtualMemoryMb(Process process)
+{
+    try
+    {
+        long mb = process.VirtualMemorySize64 / (1024 * 1024);
+        return mb.ToString();
+    }
+    catch
+    {
+        return "N/A";
+    }
+}
+
+static string SafeGetWorkingSetMb(Process process)
+{
+    try
+    {
+        long mb = process.WorkingSet64 / (1024 * 1024);
+        return mb.ToString();
+    }
+    catch
+    {
+        return "N/A";
     }
 }
