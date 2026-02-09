@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
+// Locate the solution root so we can find the built ConsoleHelloWorld executable.
 string? solutionRoot = FindSolutionRoot(AppContext.BaseDirectory, "Gestion-des-processus-2.sln");
 if (solutionRoot is null)
 {
@@ -10,6 +11,7 @@ if (solutionRoot is null)
     return;
 }
 
+// Build the path to the ConsoleHelloWorld executable (Debug build).
 string helloExe = Path.Combine(
     solutionRoot,
     "ConsoleHelloWorld",
@@ -18,6 +20,7 @@ string helloExe = Path.Combine(
     "net10.0",
     "ConsoleHelloWorld.exe");
 
+// Ensure the child executable exists before starting it.
 if (!File.Exists(helloExe))
 {
     Console.Error.WriteLine($"Executable not found: {helloExe}");
@@ -26,6 +29,7 @@ if (!File.Exists(helloExe))
     return;
 }
 
+// Start ConsoleHelloWorld as a child process.
 Process? helloProcess = LaunchProcessWithMessage(new ProcessStartInfo
 {
     FileName = helloExe,
@@ -41,6 +45,7 @@ if (helloProcess is null)
 
 Console.WriteLine("Processus principal continue apres le lancement.");
 
+// Open Windows Explorer directly in C:\\Windows and wait for it to close.
 LaunchAndWait(new ProcessStartInfo
 {
     FileName = "explorer.exe",
@@ -48,6 +53,7 @@ LaunchAndWait(new ProcessStartInfo
     UseShellExecute = true
 }, 2000);
 
+// Create a text file and open it in Notepad.
 string noteFile = Path.Combine(solutionRoot, "note-q5.txt");
 File.WriteAllText(noteFile, "Fichier de test pour Q5.");
 
@@ -58,6 +64,7 @@ LaunchAndWait(new ProcessStartInfo
     UseShellExecute = true
 }, 2000);
 
+// Use shell verbs to open Explorer and win.ini in the default editor.
 LaunchAndWait(new ProcessStartInfo
 {
     FileName = "C:\\Windows",
@@ -74,6 +81,9 @@ LaunchAndWait(new ProcessStartInfo
 
 Console.WriteLine("Fin du processus principal.");
 
+/// <summary>
+/// Walks up the directory tree to find the solution root.
+/// </summary>
 static string? FindSolutionRoot(string startDir, string solutionFileName)
 {
     DirectoryInfo? dir = new DirectoryInfo(startDir);
@@ -91,6 +101,9 @@ static string? FindSolutionRoot(string startDir, string solutionFileName)
     return null;
 }
 
+/// <summary>
+/// Starts a process and prints its name and id to the console.
+/// </summary>
 static Process? LaunchProcessWithMessage(ProcessStartInfo startInfo)
 {
     Process? process = Process.Start(startInfo);
@@ -104,6 +117,9 @@ static Process? LaunchProcessWithMessage(ProcessStartInfo startInfo)
     return process;
 }
 
+/// <summary>
+/// Starts a process, waits for it to exit, and optionally sleeps the parent.
+/// </summary>
 static void LaunchAndWait(ProcessStartInfo startInfo, int parentDelayMs)
 {
     Process? process = Process.Start(startInfo);
