@@ -17,7 +17,13 @@ public static class Program
         IProjectContextProvider projectContextProvider = new ProjectContextProvider(solutionLocator);
         ITextFileWriter textFileWriter = new TextFileWriter();
         IProcessLauncher processLauncher = new ProcessLauncher(console);
-        IParentWorkflow parentWorkflow = new ParentWorkflow(console, projectContextProvider, textFileWriter, processLauncher);
+        IInteractiveMenu interactiveMenu = new ArrowKeyInteractiveMenu(console);
+        IParentWorkflow parentWorkflow = new ParentWorkflow(
+            console,
+            projectContextProvider,
+            textFileWriter,
+            processLauncher,
+            interactiveMenu);
 
         var application = new ParentApplication(console, optionsParser, processListPresenter, parentWorkflow);
         return application.Run(args);

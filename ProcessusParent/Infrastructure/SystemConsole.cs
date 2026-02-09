@@ -13,4 +13,25 @@ public sealed class SystemConsole : IConsole
     {
         Console.Error.WriteLine(message);
     }
+
+    public void Clear()
+    {
+        try
+        {
+            Console.Clear();
+        }
+        catch (IOException)
+        {
+            // No-op when output is redirected.
+        }
+        catch (InvalidOperationException)
+        {
+            // No-op when no interactive console is attached.
+        }
+    }
+
+    public ConsoleKeyInfo ReadKey(bool intercept)
+    {
+        return Console.ReadKey(intercept);
+    }
 }
