@@ -25,8 +25,7 @@ if (!File.Exists(helloExe))
     return;
 }
 
-Console.WriteLine("Lancement de ConsoleHelloWorld...");
-Process? helloProcess = Process.Start(new ProcessStartInfo
+Process? helloProcess = LaunchProcessWithMessage(new ProcessStartInfo
 {
     FileName = helloExe,
     Arguments = "Alice 3000",
@@ -35,22 +34,19 @@ Process? helloProcess = Process.Start(new ProcessStartInfo
 
 if (helloProcess is null)
 {
-    Console.Error.WriteLine("Impossible de lancer ConsoleHelloWorld.");
     Environment.ExitCode = 1;
     return;
 }
 
-Console.WriteLine("Processus principal continue après le lancement.");
+Console.WriteLine("Processus principal continue apres le lancement.");
 
-Console.WriteLine("Lancement de explorer.exe...");
-Process.Start(new ProcessStartInfo
+_ = LaunchProcessWithMessage(new ProcessStartInfo
 {
     FileName = "explorer.exe",
     UseShellExecute = true
 });
 
-Console.WriteLine("Lancement de notepad.exe...");
-Process.Start(new ProcessStartInfo
+_ = LaunchProcessWithMessage(new ProcessStartInfo
 {
     FileName = "notepad.exe",
     UseShellExecute = true
@@ -73,4 +69,17 @@ static string? FindSolutionRoot(string startDir, string solutionFileName)
     }
 
     return null;
+}
+
+static Process? LaunchProcessWithMessage(ProcessStartInfo startInfo)
+{
+    Process? process = Process.Start(startInfo);
+    if (process is null)
+    {
+        Console.Error.WriteLine($"Impossible de lancer {startInfo.FileName}.");
+        return null;
+    }
+
+    Console.WriteLine($"Processus {process.ProcessName} n° {process.Id} est lancé.");
+    return process;
 }
