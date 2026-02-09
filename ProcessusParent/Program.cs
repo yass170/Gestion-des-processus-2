@@ -44,12 +44,17 @@ Console.WriteLine("Processus principal continue apres le lancement.");
 LaunchAndWait(new ProcessStartInfo
 {
     FileName = "explorer.exe",
+    Arguments = "C:\\Windows",
     UseShellExecute = true
 }, 2000);
+
+string noteFile = Path.Combine(solutionRoot, "note-q5.txt");
+File.WriteAllText(noteFile, "Fichier de test pour Q5.");
 
 LaunchAndWait(new ProcessStartInfo
 {
     FileName = "notepad.exe",
+    Arguments = $"\"{noteFile}\"",
     UseShellExecute = true
 }, 2000);
 
