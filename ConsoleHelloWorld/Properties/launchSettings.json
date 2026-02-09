@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ConsoleHelloWorld": {
+      "commandName": "Project",
+      "commandLineArgs": "Alice 1000"
+    }
+  }
+}

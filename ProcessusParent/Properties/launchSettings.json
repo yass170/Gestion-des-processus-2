@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ProcessusParent": {
+      "commandName": "Project",
+      "commandLineArgs": "--list-processes"
+    }
+  }
+}
