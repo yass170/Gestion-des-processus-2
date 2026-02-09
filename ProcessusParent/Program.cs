@@ -58,6 +58,20 @@ LaunchAndWait(new ProcessStartInfo
     UseShellExecute = true
 }, 2000);
 
+LaunchAndWait(new ProcessStartInfo
+{
+    FileName = "C:\\Windows",
+    Verb = "explore",
+    UseShellExecute = true
+}, 2000);
+
+LaunchAndWait(new ProcessStartInfo
+{
+    FileName = "C:\\Windows\\win.ini",
+    Verb = "open",
+    UseShellExecute = true
+}, 2000);
+
 Console.WriteLine("Fin du processus principal.");
 
 static string? FindSolutionRoot(string startDir, string solutionFileName)
