@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 
 string? solutionRoot = FindSolutionRoot(AppContext.BaseDirectory, "Gestion-des-processus-2.sln");
 if (solutionRoot is null)
@@ -40,17 +41,17 @@ if (helloProcess is null)
 
 Console.WriteLine("Processus principal continue apres le lancement.");
 
-_ = LaunchProcessWithMessage(new ProcessStartInfo
+LaunchAndWait(new ProcessStartInfo
 {
     FileName = "explorer.exe",
     UseShellExecute = true
-});
+}, 2000);
 
-_ = LaunchProcessWithMessage(new ProcessStartInfo
+LaunchAndWait(new ProcessStartInfo
 {
     FileName = "notepad.exe",
     UseShellExecute = true
-});
+}, 2000);
 
 Console.WriteLine("Fin du processus principal.");
 
@@ -80,6 +81,25 @@ static Process? LaunchProcessWithMessage(ProcessStartInfo startInfo)
         return null;
     }
 
-    Console.WriteLine($"Processus {process.ProcessName} n° {process.Id} est lancé.");
+    Console.WriteLine($"Processus {process.ProcessName} no {process.Id} est lance.");
     return process;
+}
+
+static void LaunchAndWait(ProcessStartInfo startInfo, int parentDelayMs)
+{
+    Process? process = Process.Start(startInfo);
+    if (process is null)
+    {
+        Console.Error.WriteLine($"Impossible de lancer {startInfo.FileName}.");
+        return;
+    }
+
+    Console.WriteLine($"Processus {process.ProcessName} no {process.Id} est lance.");
+    process.WaitForExit();
+    Console.WriteLine($"Processus {process.ProcessName} no {process.Id} est termine.");
+
+    if (parentDelayMs > 0)
+    {
+        Thread.Sleep(parentDelayMs);
+    }
 }
